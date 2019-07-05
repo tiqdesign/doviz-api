@@ -8,9 +8,12 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+	"time"
 
 	"github.com/gorilla/mux"
 )
+
+var newurl = ""
 
 func main() {
 	//Init Router
@@ -27,8 +30,17 @@ func getCurrency(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	//url taslagı oluşturdum
 	var raw = "https://api.ratesapi.io/api/dateparam?base=baseacurr&symbols=ratecurr"
+
+	//burada bugün mü yoksa daha önceki bir tarih mi anlamak için if kullanıcam
+	t := time.Now()
+	if string(t.Format("2006-01-02")) == params["date"] || params["date"] == "latest" {
+		newurl = strings.Replace(raw, "dateparam", "latest", 1)
+	} else {
+		newurl = strings.Replace(raw, "dateparam", params["date"], 1)
+	}
+
 	//bu taslağın içerisinden tarihin bulundugu alanı değiştirdim
-	newurl := strings.Replace(raw, "dateparam", params["date"], 1)
+
 	//daha sonrasında güncellediğim url i parse edip değişmesi gereken alanları kullanıcının yolladıgı istek neticesinde değiştirdim
 	u, err := url.Parse(newurl)
 	if err != nil {
