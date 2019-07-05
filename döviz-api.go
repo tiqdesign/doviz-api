@@ -15,6 +15,8 @@ import (
 
 var newurl = ""
 
+//Example:-> http://localhost:5000/api/getCurrency/2018-11-11/USD/TRY
+
 func main() {
 	//Init Router
 	router := mux.NewRouter()
